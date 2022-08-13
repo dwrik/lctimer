@@ -72,11 +72,10 @@ func main() {
 
 	// Define custom usage
 	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "\n%s sets a timer based on the difficulty\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "%s sets a timer based on the difficulty\n", os.Args[0])
 		fmt.Fprintf(flag.CommandLine.Output(), "of the problem and notifies when the timer ends\n")
-		fmt.Fprintf(flag.CommandLine.Output(), "\nusage: %s <difficulty_flag>\n\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "usage: %s <difficulty>\n", os.Args[0])
 		flag.CommandLine.PrintDefaults()
-		fmt.Fprintln(flag.CommandLine.Output())
 		os.Exit(2)
 	}
 
