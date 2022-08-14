@@ -28,11 +28,11 @@ var setting settings
 func setDiffTime(easy, medium, hard bool) {
 	switch {
 	case easy:
-		setting = settings{etime, "Easy"}
+		setting = settings{etime, "easy"}
 	case medium:
-		setting = settings{mtime, "Medium"}
+		setting = settings{mtime, "medium"}
 	case hard:
-		setting = settings{htime, "Hard"}
+		setting = settings{htime, "hard"}
 	}
 }
 
@@ -52,8 +52,8 @@ func notify() {
 
 	// build applescript
 	script := fmt.Sprintf(
-		"display notification \"%s\" with title \"%s\" subtitle \"%s: %d mins\" sound name \"%s\"",
-		body, title, setting.diff, setting.time, sound,
+		"display notification \"%s\" with title \"%s\" sound name \"%s\"",
+		body, title, sound,
 	)
 
 	// run applescript
@@ -66,9 +66,9 @@ func notify() {
 
 func main() {
 	// Define difficulty flags
-	easy := flag.Bool("easy", false, "set timer for an 'Easy' problem (10 mins)")
-	medium := flag.Bool("medium", false, "set timer for a 'Medium' problem (20 mins)")
-	hard := flag.Bool("hard", false, "set timer for a 'Hard' problem (30 mins)")
+	easy := flag.Bool("easy", false, "set timer for an easy problem (10 mins)")
+	medium := flag.Bool("medium", false, "set timer for a medium problem (20 mins)")
+	hard := flag.Bool("hard", false, "set timer for a hard problem (30 mins)")
 
 	// Define custom usage
 	flag.Usage = func() {
@@ -92,31 +92,25 @@ func main() {
 		os.Exit(5)
 	}
 
-	// Print newline
-	fmt.Fprintln(os.Stdout)
-
 	// Create timer
-	timer := time.NewTimer(time.Duration(setting.time) * time.Minute)
-	fmt.Fprintf(os.Stdout, "=> timer started for %d mins\n", setting.time)
+	timer := time.NewTimer(time.Duration(setting.time) * time.Second)
+	fmt.Fprintf(os.Stdout, "[+] timer started\n")
 
 	// Get user input
 	userC := make(chan bool)
 	go userInput(userC)
-	fmt.Fprint(os.Stdout, "=> press enter to stop the timer")
+	fmt.Fprint(os.Stdout, "[i] press enter to stop the timer...")
 
 	// Handle Time up or
 	// User intervention
 	select {
 	case <-timer.C:
 		notify()
-		fmt.Fprintln(os.Stdout, "\n=> notification sent")
+		fmt.Fprintln(os.Stdout, "\n[!] time's up")
 	case <-userC:
 		if !timer.Stop() {
 			<-timer.C
 		}
-		fmt.Fprintln(os.Stdout, "=> timer stopped")
+		fmt.Fprintln(os.Stdout, "[x] timer stopped")
 	}
-
-	// Print newline
-	fmt.Fprintln(os.Stdout)
 }
