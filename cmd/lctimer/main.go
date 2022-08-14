@@ -93,7 +93,7 @@ func main() {
 	}
 
 	// Create timer
-	timer := time.NewTimer(time.Duration(setting.time) * time.Second)
+	timer := time.NewTimer(time.Duration(setting.time) * time.Minute)
 	fmt.Fprintf(os.Stdout, "[+] timer started\n")
 
 	// Get user input
